@@ -1,4 +1,4 @@
-package blockchain
+package Golang_beginning_blockchain
 
 import "fmt"
 
