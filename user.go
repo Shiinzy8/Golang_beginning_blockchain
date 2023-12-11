@@ -35,12 +35,12 @@ func (u *User) removeDol(amountDol float64) {
 	u.amountDol -= amountDol
 }
 
-func (u *User) addBit(amountDol float64) {
-	u.amountDol += amountDol
+func (u *User) addBit(amountBit float64) {
+	u.amountBit += amountBit
 }
 
-func (u *User) removeBit(amountDol float64) {
-	u.amountDol -= amountDol
+func (u *User) removeBit(amountBit float64) {
+	u.amountBit -= amountBit
 }
 
 func (u User) GetAmountDol() float64 {
