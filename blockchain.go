@@ -4,17 +4,78 @@ import (
 	"time"
 )
 
+type Operation string
+
+const (
+	AddDol        Operation = "Add dollars to account"
+	ConvertDolBit Operation = "Convert dollars to bitcoins"
+	ConvertBitDol Operation = "Convert bitcoins to dollars"
+	RemoveDol     Operation = "Remove dollars from account"
+	SentBit       Operation = "Sent bitcoins to another user"
+)
+
 type Blockchain struct {
 	genesisBlock Block
 	chain        []Block
 	difficulty   int
+	genesisUser  User
+	users        []User
+	countUsers   int
 }
 
-func (b *Blockchain) AddBlock(from, to string, amount float64) Block {
+func (b *Blockchain) AddDol(user User, amountDol float64) Block {
+	user.amountDol += amountDol
+	return b.addBlock(b.genesisUser, user, AddDol, amountDol, 0)
+}
+
+func (b *Blockchain) RemoveDol(user User, amountDol float64) (Block, error) {
+	if ok, err := user.checkAmountDol(amountDol); ok {
+		user.amountDol -= amountDol
+		return b.addBlock(user, b.genesisUser, RemoveDol, amountDol, 0), nil
+	} else {
+		return Block{}, err
+	}
+}
+
+func (b *Blockchain) SentBit(fromUser, toUser User, amountBit float64) (Block, error) {
+	if ok, err := fromUser.checkAmountBit(amountBit); ok {
+		fromUser.amountBit -= amountBit
+		toUser.amountBit += amountBit
+		return b.addBlock(fromUser, toUser, SentBit, 0, amountBit), nil
+	} else {
+		return Block{}, err
+	}
+}
+
+func (b *Blockchain) ConvertDolBit(user User, amountDol float64) (Block, error) {
+	if ok, err := user.checkAmountDol(amountDol); ok {
+		user.amountDol -= amountDol
+		amountBit := amountDol / 36000
+		user.amountBit += amountBit
+		return b.addBlock(user, user, ConvertDolBit, amountDol, amountBit), nil
+	} else {
+		return Block{}, err
+	}
+}
+
+func (b *Blockchain) ConvertBitDol(user User, amountBit float64) (Block, error) {
+	if ok, err := user.checkAmountBit(amountBit); ok {
+		user.amountBit -= amountBit
+		amountDol := amountBit * 36000
+		user.amountDol += amountDol
+		return b.addBlock(user, user, ConvertBitDol, amountDol, amountBit), nil
+	} else {
+		return Block{}, err
+	}
+}
+
+func (b *Blockchain) addBlock(from, to User, operation Operation, amountDol float64, amountBit float64) Block {
 	blockData := BlockData{
-		from:   from,
-		to:     to,
-		amount: amount,
+		from:      from,
+		to:        to,
+		operation: operation,
+		amountDol: amountDol,
+		amountBit: amountBit,
 	}
 	lastBlock := b.chain[len(b.chain)-1]
 	newBlock := Block{
@@ -33,11 +94,28 @@ func CreateBlockchain(difficulty int) Blockchain {
 		hash:      "0",
 		timestamp: time.Now(),
 	}
+
+	genesisUser := User{
+		name: "Blockchain",
+		id:   0,
+	}
+
 	return Blockchain{
 		genesisBlock,
 		[]Block{genesisBlock},
 		difficulty,
+		genesisUser,
+		[]User{genesisUser},
+		0,
 	}
+}
+
+func (b *Blockchain) AddUser(name string) User {
+	b.countUsers++
+	newUser := User{name: name, id: b.countUsers, amountBit: 0, amountDol: 0}
+	b.users = append(b.users, newUser)
+
+	return newUser
 }
 
 func (b Blockchain) IsValid() bool {
@@ -57,6 +135,14 @@ func (b Blockchain) GetChain() []Block {
 
 func (b Blockchain) GetGenesisBlock() Block {
 	return b.genesisBlock
+}
+
+func (b Blockchain) GetUsers() []User {
+	return b.users
+}
+
+func (b Blockchain) GetGenesisUser() User {
+	return b.genesisUser
 }
 
 func (b Blockchain) GetDifficulty() int {
