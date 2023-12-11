@@ -27,6 +27,22 @@ func (u User) checkAmountBit(amountBit float64) (bool, error) {
 	}
 }
 
+func (u *User) addDol(amountDol float64) {
+	u.amountDol += amountDol
+}
+
+func (u *User) removeDol(amountDol float64) {
+	u.amountDol -= amountDol
+}
+
+func (u *User) addBit(amountDol float64) {
+	u.amountDol += amountDol
+}
+
+func (u *User) removeBit(amountDol float64) {
+	u.amountDol -= amountDol
+}
+
 func (u User) GetAmountDol() float64 {
 	return u.amountDol
 }

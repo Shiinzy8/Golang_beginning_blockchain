@@ -24,13 +24,13 @@ type Blockchain struct {
 }
 
 func (b *Blockchain) AddDol(user User, amountDol float64) Block {
-	user.amountDol += amountDol
+	user.addDol(amountDol)
 	return b.addBlock(b.genesisUser, user, AddDol, amountDol, 0)
 }
 
 func (b *Blockchain) RemoveDol(user User, amountDol float64) (Block, error) {
 	if ok, err := user.checkAmountDol(amountDol); ok {
-		user.amountDol -= amountDol
+		user.removeDol(amountDol)
 		return b.addBlock(user, b.genesisUser, RemoveDol, amountDol, 0), nil
 	} else {
 		return Block{}, err
@@ -39,8 +39,8 @@ func (b *Blockchain) RemoveDol(user User, amountDol float64) (Block, error) {
 
 func (b *Blockchain) SentBit(fromUser, toUser User, amountBit float64) (Block, error) {
 	if ok, err := fromUser.checkAmountBit(amountBit); ok {
-		fromUser.amountBit -= amountBit
-		toUser.amountBit += amountBit
+		fromUser.removeBit(amountBit)
+		toUser.addBit(amountBit)
 		return b.addBlock(fromUser, toUser, SentBit, 0, amountBit), nil
 	} else {
 		return Block{}, err
@@ -49,9 +49,9 @@ func (b *Blockchain) SentBit(fromUser, toUser User, amountBit float64) (Block, e
 
 func (b *Blockchain) ConvertDolBit(user User, amountDol float64) (Block, error) {
 	if ok, err := user.checkAmountDol(amountDol); ok {
-		user.amountDol -= amountDol
+		user.removeDol(amountDol)
 		amountBit := amountDol / 36000
-		user.amountBit += amountBit
+		user.addBit(amountBit)
 		return b.addBlock(user, user, ConvertDolBit, amountDol, amountBit), nil
 	} else {
 		return Block{}, err
@@ -60,9 +60,9 @@ func (b *Blockchain) ConvertDolBit(user User, amountDol float64) (Block, error) 
 
 func (b *Blockchain) ConvertBitDol(user User, amountBit float64) (Block, error) {
 	if ok, err := user.checkAmountBit(amountBit); ok {
-		user.amountBit -= amountBit
+		user.removeBit(amountBit)
 		amountDol := amountBit * 36000
-		user.amountDol += amountDol
+		user.addDol(amountDol)
 		return b.addBlock(user, user, ConvertBitDol, amountDol, amountBit), nil
 	} else {
 		return Block{}, err
