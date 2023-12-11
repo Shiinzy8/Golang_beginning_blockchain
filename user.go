@@ -26,3 +26,11 @@ func (u User) checkAmountBit(amountBit float64) (bool, error) {
 		return false, err
 	}
 }
+
+func (u User) GetAmountDol() float64 {
+	return u.amountDol
+}
+
+func (u User) GetAmountBit() float64 {
+	return u.amountBit
+}
