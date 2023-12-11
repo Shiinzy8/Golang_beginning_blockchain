@@ -1,6 +1,7 @@
 package Golang_beginning_blockchain
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -27,6 +28,7 @@ func (b *Blockchain) AddBlock(from, to string, amount float64) {
 }
 
 func CreateBlockchain(difficulty int) Blockchain {
+	fmt.Println("Blockchain created")
 	genesisBlock := Block{
 		hash:      "0",
 		timestamp: time.Now(),
