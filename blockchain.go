@@ -111,12 +111,12 @@ func CreateBlockchain(difficulty int) Blockchain {
 	}
 }
 
-func (b *Blockchain) AddUser(name string) User {
+func (b *Blockchain) AddUser(name string) *User {
 	b.countUsers++
 	newUser := User{name: name, id: b.countUsers, amountBit: 0, amountDol: 0}
 	b.users[b.countUsers] = &newUser
 
-	return newUser
+	return &newUser
 }
 
 func (b Blockchain) IsValid() bool {
