@@ -24,21 +24,21 @@ type Blockchain struct {
 	countUsers   int
 }
 
-func (b *Blockchain) AddDol(user User, amountDol float64) Block {
+func (b *Blockchain) AddDol(user *User, amountDol float64) Block {
 	b.users[user.id].addDol(amountDol)
-	return b.addBlock(*b.genesisUser, user, AddDol, amountDol, 0)
+	return b.addBlock(b.genesisUser, user, AddDol, amountDol, 0)
 }
 
-func (b *Blockchain) RemoveDol(user User, amountDol float64) (Block, error) {
+func (b *Blockchain) RemoveDol(user *User, amountDol float64) (Block, error) {
 	if ok, err := user.checkAmountDol(amountDol); ok {
 		b.users[user.id].removeDol(amountDol)
-		return b.addBlock(user, *b.genesisUser, RemoveDol, amountDol, 0), nil
+		return b.addBlock(user, b.genesisUser, RemoveDol, amountDol, 0), nil
 	} else {
 		return Block{}, err
 	}
 }
 
-func (b *Blockchain) SentBit(fromUser, toUser User, amountBit float64) (Block, error) {
+func (b *Blockchain) SentBit(fromUser, toUser *User, amountBit float64) (Block, error) {
 	if ok, err := fromUser.checkAmountBit(amountBit); ok {
 		b.users[fromUser.id].removeBit(amountBit)
 		b.users[toUser.id].addBit(amountBit)
@@ -48,7 +48,7 @@ func (b *Blockchain) SentBit(fromUser, toUser User, amountBit float64) (Block, e
 	}
 }
 
-func (b *Blockchain) ConvertDolBit(user User, amountDol float64) (Block, error) {
+func (b *Blockchain) ConvertDolBit(user *User, amountDol float64) (Block, error) {
 	if ok, err := user.checkAmountDol(amountDol); ok {
 		b.users[user.id].removeDol(amountDol)
 		amountBit := amountDol / 36000
@@ -59,7 +59,7 @@ func (b *Blockchain) ConvertDolBit(user User, amountDol float64) (Block, error) 
 	}
 }
 
-func (b *Blockchain) ConvertBitDol(user User, amountBit float64) (Block, error) {
+func (b *Blockchain) ConvertBitDol(user *User, amountBit float64) (Block, error) {
 	if ok, err := user.checkAmountBit(amountBit); ok {
 		b.users[user.id].removeBit(amountBit)
 		amountDol := amountBit * 36000
@@ -70,10 +70,10 @@ func (b *Blockchain) ConvertBitDol(user User, amountBit float64) (Block, error) 
 	}
 }
 
-func (b *Blockchain) addBlock(from, to User, operation Operation, amountDol float64, amountBit float64) Block {
+func (b *Blockchain) addBlock(from, to *User, operation Operation, amountDol float64, amountBit float64) Block {
 	blockData := BlockData{
-		from:      from,
-		to:        to,
+		from:      *from,
+		to:        *to,
 		operation: operation,
 		amountDol: amountDol,
 		amountBit: amountBit,
