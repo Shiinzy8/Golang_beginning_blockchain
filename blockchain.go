@@ -10,7 +10,7 @@ type Blockchain struct {
 	difficulty   int
 }
 
-func (b *Blockchain) AddBlock(from, to string, amount float64) {
+func (b *Blockchain) AddBlock(from, to string, amount float64) Block {
 	blockData := BlockData{
 		from:   from,
 		to:     to,
@@ -24,6 +24,8 @@ func (b *Blockchain) AddBlock(from, to string, amount float64) {
 	}
 	newBlock.Mine(b.difficulty)
 	b.chain = append(b.chain, newBlock)
+
+	return newBlock
 }
 
 func CreateBlockchain(difficulty int) Blockchain {
