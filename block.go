@@ -2,7 +2,6 @@ package Golang_beginning_blockchain
 
 import (
 	"crypto/sha256"
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -10,7 +9,7 @@ import (
 )
 
 type Block struct {
-	data         map[string]interface{}
+	data         BlockData
 	hash         string
 	previousHash string
 	timestamp    time.Time
@@ -18,8 +17,8 @@ type Block struct {
 }
 
 func (b Block) CalculateHash() string {
-	data, _ := json.Marshal(b.data)
-	blockData := b.previousHash + string(data) + b.timestamp.String() + strconv.Itoa(b.pow)
+	json, _ := b.data.toJson()
+	blockData := b.previousHash + string(json) + b.timestamp.String() + strconv.Itoa(b.pow)
 	blockHash := sha256.Sum256([]byte(blockData))
 	return fmt.Sprintf("%x", blockHash)
 }
@@ -29,4 +28,24 @@ func (b *Block) Mine(difficulty int) {
 		b.pow++
 		b.hash = b.CalculateHash()
 	}
+}
+
+func (b *Block) GetHash() string {
+	return b.hash
+}
+
+func (b *Block) GetPreviousHash() string {
+	return b.previousHash
+}
+
+func (b *Block) GetPow() int {
+	return b.pow
+}
+
+func (b *Block) GetCreatedTime() time.Time {
+	return b.timestamp
+}
+
+func (b *Block) GetData() BlockData {
+	return b.data
 }

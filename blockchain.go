@@ -1,7 +1,6 @@
 package Golang_beginning_blockchain
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -12,10 +11,10 @@ type Blockchain struct {
 }
 
 func (b *Blockchain) AddBlock(from, to string, amount float64) {
-	blockData := map[string]interface{}{
-		"from":   from,
-		"to":     to,
-		"amount": amount,
+	blockData := BlockData{
+		from:   from,
+		to:     to,
+		amount: amount,
 	}
 	lastBlock := b.chain[len(b.chain)-1]
 	newBlock := Block{
@@ -28,7 +27,6 @@ func (b *Blockchain) AddBlock(from, to string, amount float64) {
 }
 
 func CreateBlockchain(difficulty int) Blockchain {
-	fmt.Println("Blockchain created")
 	genesisBlock := Block{
 		hash:      "0",
 		timestamp: time.Now(),
@@ -49,4 +47,16 @@ func (b Blockchain) IsValid() bool {
 		}
 	}
 	return true
+}
+
+func (b Blockchain) GetChain() []Block {
+	return b.chain
+}
+
+func (b Blockchain) GetGenesisBlock() Block {
+	return b.genesisBlock
+}
+
+func (b Blockchain) GetDifficulty() int {
+	return b.difficulty
 }
