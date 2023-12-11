@@ -10,7 +10,7 @@ type Blockchain struct {
 	difficulty   int
 }
 
-func (b *Blockchain) addBlock(from, to string, amount float64) {
+func (b *Blockchain) AddBlock(from, to string, amount float64) {
 	blockData := map[string]interface{}{
 		"from":   from,
 		"to":     to,
@@ -22,7 +22,7 @@ func (b *Blockchain) addBlock(from, to string, amount float64) {
 		previousHash: lastBlock.hash,
 		timestamp:    time.Now(),
 	}
-	newBlock.mine(b.difficulty)
+	newBlock.Mine(b.difficulty)
 	b.chain = append(b.chain, newBlock)
 }
 
@@ -38,11 +38,11 @@ func CreateBlockchain(difficulty int) Blockchain {
 	}
 }
 
-func (b Blockchain) isValid() bool {
+func (b Blockchain) IsValid() bool {
 	for i := range b.chain[1:] {
 		previousBlock := b.chain[i]
 		currentBlock := b.chain[i+1]
-		if currentBlock.hash != currentBlock.calculateHash() || currentBlock.previousHash != previousBlock.hash {
+		if currentBlock.hash != currentBlock.CalculateHash() || currentBlock.previousHash != previousBlock.hash {
 			return false
 		}
 	}
