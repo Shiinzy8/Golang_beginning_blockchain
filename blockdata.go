@@ -2,16 +2,16 @@ package Golang_beginning_blockchain
 
 import "encoding/json"
 
-type BlockData struct {
-	from      User
-	to        User
+type blockData struct {
+	from      user
+	to        user
 	amountDol float64
 	amountBit float64
-	operation Operation
+	operation operation
 	json.Marshaler
 }
 
-func (b BlockData) toJson() ([]byte, error) {
+func (b blockData) toJson() ([]byte, error) {
 	data := map[string]interface{}{
 		"from":      b.from.id,
 		"to":        b.to.id,
@@ -23,18 +23,18 @@ func (b BlockData) toJson() ([]byte, error) {
 	return json.Marshal(data)
 }
 
-func (b BlockData) GetFromUser() User {
+func (b blockData) GetFromUser() user {
 	return b.from
 }
 
-func (b BlockData) GetToUser() User {
+func (b blockData) GetToUser() user {
 	return b.to
 }
 
-func (b BlockData) GetAmountDol() float64 {
+func (b blockData) GetAmountDol() float64 {
 	return b.amountDol
 }
 
-func (b BlockData) GetAmountBit() float64 {
+func (b blockData) GetAmountBit() float64 {
 	return b.amountDol
 }

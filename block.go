@@ -8,44 +8,44 @@ import (
 	"time"
 )
 
-type Block struct {
-	data         BlockData
+type block struct {
+	data         blockData
 	hash         string
 	previousHash string
 	timestamp    time.Time
 	pow          int
 }
 
-func (b Block) CalculateHash() string {
+func (b block) calculateHash() string {
 	json, _ := b.data.toJson()
 	blockData := b.previousHash + string(json) + b.timestamp.String() + strconv.Itoa(b.pow)
 	blockHash := sha256.Sum256([]byte(blockData))
 	return fmt.Sprintf("%x", blockHash)
 }
 
-func (b *Block) Mine(difficulty int) {
+func (b *block) Mine(difficulty int) {
 	for !strings.HasPrefix(b.hash, strings.Repeat("0", difficulty)) {
 		b.pow++
-		b.hash = b.CalculateHash()
+		b.hash = b.calculateHash()
 	}
 }
 
-func (b *Block) GetHash() string {
+func (b *block) GetHash() string {
 	return b.hash
 }
 
-func (b *Block) GetPreviousHash() string {
+func (b *block) GetPreviousHash() string {
 	return b.previousHash
 }
 
-func (b *Block) GetPow() int {
+func (b *block) GetPow() int {
 	return b.pow
 }
 
-func (b *Block) GetCreatedTime() time.Time {
+func (b *block) GetCreatedTime() time.Time {
 	return b.timestamp
 }
 
-func (b *Block) GetData() BlockData {
+func (b *block) GetData() blockData {
 	return b.data
 }

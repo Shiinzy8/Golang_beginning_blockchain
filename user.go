@@ -2,14 +2,14 @@ package Golang_beginning_blockchain
 
 import "errors"
 
-type User struct {
+type user struct {
 	name      string
 	id        int
 	amountDol float64
 	amountBit float64
 }
 
-func (u User) checkAmountDol(amountDol float64) (bool, error) {
+func (u user) checkAmountDol(amountDol float64) (bool, error) {
 	if u.amountDol > amountDol {
 		return true, nil
 	} else {
@@ -18,7 +18,7 @@ func (u User) checkAmountDol(amountDol float64) (bool, error) {
 	}
 }
 
-func (u User) checkAmountBit(amountBit float64) (bool, error) {
+func (u user) checkAmountBit(amountBit float64) (bool, error) {
 	if u.amountBit > amountBit {
 		return true, nil
 	} else {
@@ -27,26 +27,26 @@ func (u User) checkAmountBit(amountBit float64) (bool, error) {
 	}
 }
 
-func (u *User) addDol(amountDol float64) {
+func (u *user) addDol(amountDol float64) {
 	u.amountDol += amountDol
 }
 
-func (u *User) removeDol(amountDol float64) {
+func (u *user) removeDol(amountDol float64) {
 	u.amountDol -= amountDol
 }
 
-func (u *User) addBit(amountBit float64) {
+func (u *user) addBit(amountBit float64) {
 	u.amountBit += amountBit
 }
 
-func (u *User) removeBit(amountBit float64) {
+func (u *user) removeBit(amountBit float64) {
 	u.amountBit -= amountBit
 }
 
-func (u User) GetAmountDol() float64 {
+func (u user) GetAmountDol() float64 {
 	return u.amountDol
 }
 
-func (u User) GetAmountBit() float64 {
+func (u user) GetAmountBit() float64 {
 	return u.amountBit
 }
